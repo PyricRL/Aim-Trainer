@@ -1,4 +1,5 @@
-from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QWidget, QVBoxLayout
+# Library Imports
+from PySide6.QtWidgets import QMainWindow, QPushButton, QLabel, QWidget, QVBoxLayout
 from PySide6 import QtCore
 
 class AimTrackerUI(QMainWindow):

@@ -1,6 +1,8 @@
+# Library Imports
 from PySide6.QtWidgets import QApplication
 import sys
 
+# File Imports
 from gui import AimTrackerUI
 
 if __name__ == "__main__":
