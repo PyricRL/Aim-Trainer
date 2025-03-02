@@ -26,7 +26,8 @@ class MainWindow(QMainWindow):
 
         # Initialize pages
         self.addMainMenu()
-        self.addGridPage()
+        self.addGridGamePage()
+        self.addRandomGamePage()
 
         # Set current page to be index 0 (main menu)
         self.stackedWidget.setCurrentIndex(0)
@@ -41,35 +42,68 @@ class MainWindow(QMainWindow):
         self.titleLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.titleLabel.setFont(QFont("Arial", 40))
 
-        # Configure button
-        self.startSessionButton = QPushButton("Start Session")
-        self.startSessionButton.setFixedSize(200, 50)
-        self.startSessionButton.clicked.connect(self.startSessionClicked)
+        # Configure Grid Button
+        self.startGridButton = QPushButton("Start Grid")
+        self.startGridButton.setFixedSize(200, 50)
+        self.startGridButton.clicked.connect(self.gameStarted)
+        self.startGridButton.setObjectName("startGridButton")
+
+        # Configure Random Button
+        self.startRandomButton = QPushButton("Start Random")
+        self.startRandomButton.setFixedSize(200, 50)
+        self.startRandomButton.clicked.connect(self.gameStarted)
+        self.startRandomButton.setObjectName("startRandomButton")
         
         # Add widgets to screeen
         layout.addWidget(self.titleLabel)
-        layout.addWidget(self.startSessionButton, alignment=Qt.AlignmentFlag.AlignHCenter)
+        layout.addWidget(self.startGridButton, alignment=Qt.AlignmentFlag.AlignHCenter)
+        layout.addWidget(self.startRandomButton, alignment=Qt.AlignmentFlag.AlignHCenter)
 
         # Apply layout
         mainMenu.setLayout(layout)
 
-        # Add widget to stackedWidget (creating a page)
+        # Add widget to stackedWidget (creating a page) index 0
         self.stackedWidget.addWidget(mainMenu)
     
-    def addGridPage(self):
+    def addGridGamePage(self):
+        # Set gridPage as a widget with a box layout
+        randomPage = QWidget()
+        layout = QVBoxLayout()
+
+        # Configure label
+        self.gameLabel = QLabel("This is the grid game")
+        self.gameLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.gameLabel.setFont(QFont("Arial", 40))
+
+        # Configure button
+        self.startSessionButton = QPushButton("End Session")
+        self.startSessionButton.setFixedSize(200, 50)
+        self.startSessionButton.clicked.connect(self.gameStarted)
+
+        # Add widgets to screen
+        layout.addWidget(self.gameLabel)
+        layout.addWidget(self.startSessionButton, alignment=Qt.AlignmentFlag.AlignHCenter)
+
+        # Apply layout
+        randomPage.setLayout(layout)
+
+        # Add widget to stackedWidget (creating a page) index 1
+        self.stackedWidget.addWidget(randomPage)
+    
+    def addRandomGamePage(self):
         # Set gridPage as a widget with a box layout
         gridPage = QWidget()
         layout = QVBoxLayout()
 
         # Configure label
-        self.gameLabel = QLabel("This is the game")
+        self.gameLabel = QLabel("This is the random game")
         self.gameLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.gameLabel.setFont(QFont("Arial", 40))
 
         # Configure button
-        self.startSessionButton = QPushButton("Start Session")
+        self.startSessionButton = QPushButton("End Session")
         self.startSessionButton.setFixedSize(200, 50)
-        self.startSessionButton.clicked.connect(self.startSessionClicked)
+        self.startSessionButton.clicked.connect(self.gameStarted)
 
         # Add widgets to screen
         layout.addWidget(self.gameLabel)
@@ -78,30 +112,20 @@ class MainWindow(QMainWindow):
         # Apply layout
         gridPage.setLayout(layout)
 
-        # Add widget to stackedWidget (creating a page)
+        # Add widget to stackedWidget (creating a page) index 2
         self.stackedWidget.addWidget(gridPage)
     
-    def startSessionClicked(self):
+    def gameStarted(self):
+        button = self.sender()
 
-        # If session is not started
-        if SessionState.sessionStarted == False:
-
-            self.titleLabel.setText("Session Started")
-            self.startSessionButton.setText("End Session")
-            SessionState.sessionStarted = True
-
-            # Switch to game page
+        if button == self.startGridButton:
+            GameMode.switch(1)
             self.stackedWidget.setCurrentIndex(1)
-
-        # If session is started
-        elif SessionState.sessionStarted == True:
-            
-            self.titleLabel.setText("Sesson Ended")
-            self.startSessionButton.setText("Start Session")
-            SessionState.sessionStarted = False
-
-            # Switch to game page
-            self.stackedWidget.setCurrentIndex(0)
-
+        
+        elif button == self.startRandomButton:
+            GameMode.switch(2)
+            self.stackedWidget.setCurrentIndex(2)
+        
         else:
-            print("error")
+            GameMode.reset()
+            self.stackedWidget.setCurrentIndex(0)
