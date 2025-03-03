@@ -17,11 +17,7 @@ class GameMode:
     def switch(cls, mode):
         if mode in cls.gameModes:
             cls.currentGameMode = mode
-            print(f"Switched to {cls.currentGameMode}")
-        else:
-            print("not a gamemode")
     
     @classmethod
     def reset(cls):
         cls.currentGameMode = None
-        print(f"Reset to {cls.currentGameMode}")

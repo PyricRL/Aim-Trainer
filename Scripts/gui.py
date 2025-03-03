@@ -8,7 +8,7 @@ from PySide6.QtCore import Qt
 
 # -------- Local Files ----------
 from utils import *
-
+from target import *
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -67,7 +67,7 @@ class MainWindow(QMainWindow):
     
     def addGridGamePage(self):
         # Set gridPage as a widget with a box layout
-        randomPage = QWidget()
+        gridPage = QWidget()
         layout = QVBoxLayout()
 
         # Configure label
@@ -84,15 +84,18 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.gameLabel)
         layout.addWidget(self.startSessionButton, alignment=Qt.AlignmentFlag.AlignHCenter)
 
+        # Create a circle
+        self.circle = Target(0, 0, parent=gridPage)
+
         # Apply layout
-        randomPage.setLayout(layout)
+        gridPage.setLayout(layout)
 
         # Add widget to stackedWidget (creating a page) index 1
-        self.stackedWidget.addWidget(randomPage)
+        self.stackedWidget.addWidget(gridPage)
     
     def addRandomGamePage(self):
         # Set gridPage as a widget with a box layout
-        gridPage = QWidget()
+        randomPage = QWidget()
         layout = QVBoxLayout()
 
         # Configure label
@@ -110,10 +113,10 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.startSessionButton, alignment=Qt.AlignmentFlag.AlignHCenter)
 
         # Apply layout
-        gridPage.setLayout(layout)
+        randomPage.setLayout(layout)
 
         # Add widget to stackedWidget (creating a page) index 2
-        self.stackedWidget.addWidget(gridPage)
+        self.stackedWidget.addWidget(randomPage)
     
     def gameStarted(self):
         button = self.sender()
@@ -121,11 +124,14 @@ class MainWindow(QMainWindow):
         if button == self.startGridButton:
             GameMode.switch(1)
             self.stackedWidget.setCurrentIndex(1)
+            SessionState.sessionStarted = True
         
         elif button == self.startRandomButton:
             GameMode.switch(2)
             self.stackedWidget.setCurrentIndex(2)
+            SessionState.sessionStarted = True
         
         else:
             GameMode.reset()
             self.stackedWidget.setCurrentIndex(0)
+            SessionState.sessionStarted = False
