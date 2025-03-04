@@ -17,7 +17,12 @@ class GameMode:
     def switch(cls, mode):
         if mode in cls.gameModes:
             cls.currentGameMode = mode
+        else:
+            print("Gamemode index above game mode amounts")
+            
     
     @classmethod
     def reset(cls):
         cls.currentGameMode = None
+
+targetsOnScreen = 0
