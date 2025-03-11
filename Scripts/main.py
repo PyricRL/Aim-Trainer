@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QApplication
 import sys
 
 # -------- Local Files ----------
-from gui import MainWindow
+from gui import *
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

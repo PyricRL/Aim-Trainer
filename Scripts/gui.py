@@ -9,6 +9,7 @@ from PySide6.QtCore import Qt
 # -------- Local Files ----------
 from utils import *
 from target import *
+from tracker import Tracker
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -24,6 +25,8 @@ class MainWindow(QMainWindow):
         self.stackedWidget = QStackedWidget(self)
         self.setCentralWidget(self.stackedWidget)
 
+        self.tracker = Tracker(1000, window=self)
+
         # Initialize pages
         self.addMainMenu()
         self.addGridGamePage()
@@ -31,6 +34,10 @@ class MainWindow(QMainWindow):
 
         # Set current page to be index 0 (main menu)
         self.stackedWidget.setCurrentIndex(0)
+    
+    def createTarget(self, x, y, parent):
+        target = Target(x, y, parent=parent)
+        target.show()
     
     def addMainMenu(self):
         # Set main menu as a widget with a box layout
@@ -84,8 +91,9 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.gameLabel)
         layout.addWidget(self.startSessionButton, alignment=Qt.AlignmentFlag.AlignHCenter)
 
-        # Create a circle
-        self.circle = Target(0, 0, parent=gridPage)
+        # Connect signal output to create circles
+        self.tracker.signal.connect(lambda x, y: self.createTarget(x, y, gridPage))
+        self.tracker.sendSpawnSignal()
 
         # Apply layout
         gridPage.setLayout(layout)

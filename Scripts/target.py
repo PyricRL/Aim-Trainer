@@ -1,7 +1,7 @@
 # ----- 3rd Party Libraries -----
 from PySide6.QtWidgets import QWidget
 from PySide6.QtGui import QPainter, QColor, QPen
-from PySide6.QtCore import QRect
+from PySide6.QtCore import QRect, Qt
 
 # ----- Built-In Libraries ------
 
@@ -25,7 +25,11 @@ class Target(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-        # Target
+        # Target Drawing
         painter.setBrush(self.color)
         painter.setPen(QPen(self.borderColor))
         painter.drawEllipse(QRect(self.x, self.y, self.diameter, self.diameter))
+    
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            print(event.pos())
