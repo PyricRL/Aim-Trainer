@@ -10,6 +10,7 @@ from PySide6.QtCore import Qt
 from utils import *
 from target import *
 from tracker import Tracker
+from grid import *
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -34,10 +35,6 @@ class MainWindow(QMainWindow):
 
         # Set current page to be index 0 (main menu)
         self.stackedWidget.setCurrentIndex(0)
-    
-    def createTarget(self, x, y, parent):
-        target = Target(x, y, parent=parent)
-        target.show()
     
     def addMainMenu(self):
         # Set main menu as a widget with a box layout
@@ -77,23 +74,17 @@ class MainWindow(QMainWindow):
         gridPage = QWidget()
         layout = QVBoxLayout()
 
-        # Configure label
-        self.gameLabel = QLabel("This is the grid game")
-        self.gameLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.gameLabel.setFont(QFont("Arial", 40))
-
         # Configure button
         self.startSessionButton = QPushButton("End Session")
         self.startSessionButton.setFixedSize(200, 50)
         self.startSessionButton.clicked.connect(self.gameStarted)
 
         # Add widgets to screen
-        layout.addWidget(self.gameLabel)
-        layout.addWidget(self.startSessionButton, alignment=Qt.AlignmentFlag.AlignHCenter)
+        layout.addWidget(self.startSessionButton, alignment=Qt.AlignmentFlag.AlignBottom)
 
         # Connect signal output to create circles
-        self.tracker.signal.connect(lambda x, y: self.createTarget(x, y, gridPage))
-        self.tracker.sendSpawnSignal()
+        self.tracker.signal.connect(lambda x, y: addTargetsToScreen(x, y, parent=gridPage, window=self))
+
 
         # Apply layout
         gridPage.setLayout(layout)
@@ -133,6 +124,7 @@ class MainWindow(QMainWindow):
             GameMode.switch(1)
             self.stackedWidget.setCurrentIndex(1)
             SessionState.sessionStarted = True
+            self.tracker.sendSpawnSignal()
         
         elif button == self.startRandomButton:
             GameMode.switch(2)
